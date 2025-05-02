@@ -1,0 +1,131 @@
+{
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.7.0",
+  "exporter": {
+    "name": "Camunda Web Modeler",
+    "version": "b05b990"
+  },
+  "schemaVersion": 18,
+  "id": "Form_ReviewBookingRequest",
+  "components": [
+    {
+      "text": "### Business Travel Request",
+      "type": "text",
+      "layout": {
+        "row": "row_1",
+        "col": "auto"
+      },
+      "id": "Heading_1"
+    },
+    {
+      "label": "Destination",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_10ze6m1",
+        "columns": null
+      },
+      "id": "Field_1118l0w",
+      "key": "travelDestination",
+      "description": "Customer's location",
+      "readonly": false
+    },
+    {
+      "subtype": "date",
+      "dateLabel": "Date",
+      "label": "Date time",
+      "type": "datetime",
+      "layout": {
+        "row": "Row_063g8qc",
+        "columns": null
+      },
+      "id": "Field_0ugeqr2",
+      "key": "travelDate",
+      "readonly": false,
+      "description": "Date selected by customer",
+      "disallowPassedDates": true,
+      "validate": {
+        "required": false
+      }
+    },
+    {
+      "text": "##### Flight Details",
+      "type": "text",
+      "layout": {
+        "row": "row_2",
+        "col": "auto"
+      },
+      "id": "Subheading_1"
+    },
+    {
+      "label": "Select a flight",
+      "values": [
+        {
+          "value": "LH 1074",
+          "label": "LH 1074"
+        },
+        {
+          "value": "LH 1036",
+          "label": "LH 1036"
+        },
+        {
+          "value": "LH 1089",
+          "label": "LH 1089"
+        }
+      ],
+      "type": "select",
+      "layout": {
+        "row": "row_3",
+        "col": "auto"
+      },
+      "id": "Select_1",
+      "key": "travelFlight",
+      "searchable": false
+    },
+    {
+      "text": "##### Hotel Details",
+      "type": "text",
+      "layout": {
+        "row": "row_4",
+        "col": "auto"
+      },
+      "id": "Subheading_2"
+    },
+    {
+      "label": "Select a hotel",
+      "values": [
+        {
+          "value": "Hotel Résidence Montebello",
+          "label": "Hotel Résidence Montebello"
+        },
+        {
+          "value": "Hotel Park Lane",
+          "label": "Hotel Park Lane"
+        },
+        {
+          "value": "Hotel Rivoli",
+          "label": "Hotel Rivoli"
+        }
+      ],
+      "type": "select",
+      "layout": {
+        "row": "row_5",
+        "col": "auto"
+      },
+      "id": "Select_2",
+      "key": "travelHotel"
+    },
+    {
+      "label": "Approve booking request",
+      "type": "checkbox",
+      "layout": {
+        "row": "Row_0rmx3f0",
+        "columns": null
+      },
+      "id": "Field_0y36bkb",
+      "key": "isBooked",
+      "defaultValue": true
+    }
+  ],
+  "generated": true,
+  "type": "default"
+}

@@ -1,0 +1,59 @@
+{"executionPlatform":"Camunda Cloud","executionPlatformVersion":"8.7.0","exporter":{"name":"Camunda Web Modeler","version":"b05b990"},"schemaVersion":18,"id":"Form_DefineScopeAndTermsWithCustomer-0s8syo5","components": [
+    {
+      "text": "### Business Travel Request",
+      "label": "Text view",
+      "type": "text",
+      "layout": {
+        "row": "Row_1ski79f",
+        "columns": null
+      },
+      "id": "Field_0wrpny7"
+    },
+    {
+      "label": "Destination",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_1wqhz20",
+        "columns": null
+      },
+      "id": "Field_1t9i9fo",
+      "key": "travelDestination",
+      "description": "Customer's location",
+      "defaultValue": "Paris"
+    },
+    {
+      "subtype": "date",
+      "dateLabel": "Date",
+      "label": "Date time",
+      "type": "datetime",
+      "layout": {
+        "row": "Row_0w2o8c1",
+        "columns": null
+      },
+      "id": "Field_0zynihr",
+      "key": "travelDate",
+      "description": "Date selected by customer"
+    },
+    {
+      "label": "Trip required?",
+      "type": "checkbox",
+      "layout": {
+        "row": "Row_16f2ya9",
+        "columns": null
+      },
+      "id": "Field_04okdj6",
+      "key": "tripRequired",
+      "description": "If the issue can only be solved onsite",
+      "defaultValue": true
+    },
+    {
+      "label": "Notes",
+      "type": "textarea",
+      "layout": {
+        "row": "Row_0ggqifn",
+        "columns": null
+      },
+      "id": "Field_07kchtx",
+      "key": "notes"
+    }
+  ],"type":"default"}
