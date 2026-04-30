@@ -40,7 +40,7 @@ public class TravelAgencyApplication {
     private static final String BOOKING_CONFIRMED_JOB_TYPE = "bookingConfirmed";
     private static final String BOOKING_CANCELLED_JOB_TYPE = "bookingCancelled";
     
-    public static void main(String[] args) throws IOException{
+    public static void main(String[] args) throws IOException {
 
         loadProperties();
 
@@ -51,14 +51,14 @@ public class TravelAgencyApplication {
             .clientSecret(CAMUNDA_CLIENT_SECRET)
             .build();
 
-        try (final CamundaClient  client = CamundaClient.newClientBuilder()
+        try (final CamundaClient client = CamundaClient.newClientBuilder()
                 .grpcAddress(URI.create(CAMUNDA_GRPC_ADDRESS))
                 .restAddress(URI.create(CAMUNDA_REST_ADDRESS))
                 .credentialsProvider(credentialsProvider)
-                 .build()) {
-            
+                .build()) {
+
             //Request the Cluster Topology
-             logger.info("Connected to Cluster 2: " + client.newTopologyRequest().send().join());
+            logger.info("Connected to Cluster 2: {}", client.newTopologyRequest().send().join());
 
             //Book flight and hotel Service task
             final JobWorker bookingFlightAndHotelWorker =
@@ -93,7 +93,7 @@ public class TravelAgencyApplication {
             bookingCancelledWorker.close();
             
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Application error", e);
         }
     }
     
@@ -109,7 +109,7 @@ public class TravelAgencyApplication {
             CAMUNDA_TOKEN_AUDIENCE = properties.getProperty("CAMUNDA_TOKEN_AUDIENCE");
         
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to load properties", e);
         }
     }
 }

@@ -17,7 +17,7 @@ public class NotifyCustomerTravelConfirmedHandler implements JobHandler {
     public void handle(JobClient client, ActivatedJob job) throws Exception {
         
         final Map<String, Object> inputVariables = job.getVariablesAsMap();
-        final String travelRequestId = (String) inputVariables.get("travelRequestId");	
+        final String travelRequestId = (String) inputVariables.get("travelRequestId");
         
         //Notify customer
         customerService.notifyTravelConfirmed(travelRequestId);

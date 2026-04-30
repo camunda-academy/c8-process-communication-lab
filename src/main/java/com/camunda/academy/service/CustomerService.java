@@ -5,17 +5,14 @@ import org.slf4j.LoggerFactory;
 
 public class CustomerService {
 
-private static final Logger logger = LoggerFactory.getLogger(CustomerService.class);
+    private static final Logger logger = LoggerFactory.getLogger(CustomerService.class);
 
     public void notifyTravelConfirmed(String travelRequestId) {
-
-     logger.info(travelRequestId + " Business Travel confirmed");
+        logger.info("{} Business Travel confirmed", travelRequestId);
     }
-    
+
     public void notifyTravelCancelled(String travelRequestId) {
-
-     logger.info(travelRequestId + " Bussiness Travel cancelled");
+        logger.info("{} Business Travel cancelled", travelRequestId);
     }
-    
-    
+
 }
