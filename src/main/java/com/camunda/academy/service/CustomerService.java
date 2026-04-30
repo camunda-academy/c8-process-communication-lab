@@ -11,7 +11,7 @@ public class CustomerService {
         logger.info("{} Business Travel confirmed", travelRequestId);
     }
 
-    public void notifyTravelCancelled(String travelRequestId) {
+    public void notifyBookingCancelled(String travelRequestId) {
         logger.info("{} Business Travel cancelled", travelRequestId);
     }
 
