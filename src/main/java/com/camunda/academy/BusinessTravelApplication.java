@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.camunda.academy.handler.BookingRequestHandler;
-import com.camunda.academy.handler.NotifyCustomerTravelCancelledHandler;
+import com.camunda.academy.handler.NotifyCustomerBookingCancelledHandler;
 import com.camunda.academy.handler.NotifyCustomerTravelConfirmedHandler;
 import com.camunda.academy.handler.NotifyEmployeeTravelPolicyChangedHandler;
 
@@ -41,7 +41,7 @@ public class BusinessTravelApplication {
     private static final String NOTIFY_EMPLOYEE_POLICY_CHANGED = "notifyEmployeeTravelPolicyChanged";
 
     private static final String BOOK_REQUEST_JOB_TYPE = "bookRequest";
-    private static final String NOTIFY_CUSTOMER_TRAVEL_CANCELLED_JOB_TYPE = "notifyCustomerTravelCancelled";
+    private static final String NOTIFY_CUSTOMER_BOOKING_CANCELLED_JOB_TYPE = "notifyCustomerBookingCancelled";
     
     public static void main(String[] args) throws IOException {
         
@@ -89,8 +89,8 @@ public class BusinessTravelApplication {
             
             final JobWorker notifyCustomerBookingCancelledWorker =
                     client.newWorker()
-                        .jobType(NOTIFY_CUSTOMER_TRAVEL_CANCELLED_JOB_TYPE)
-                        .handler(new NotifyCustomerTravelCancelledHandler())
+                        .jobType(NOTIFY_CUSTOMER_BOOKING_CANCELLED_JOB_TYPE)
+                        .handler(new NotifyCustomerBookingCancelledHandler())
                         .timeout(Duration.ofSeconds(WORKER_TIMEOUT).toMillis())
                         .open();
 

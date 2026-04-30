@@ -8,7 +8,7 @@ import io.camunda.client.api.response.ActivatedJob;
 import io.camunda.client.api.worker.JobClient;
 import io.camunda.client.api.worker.JobHandler;
 
-public class NotifyCustomerTravelCancelledHandler implements JobHandler {
+public class NotifyCustomerBookingCancelledHandler implements JobHandler {
     
     //Create a Customer Service for Testing
     CustomerService customerService = new CustomerService();
@@ -20,7 +20,7 @@ public class NotifyCustomerTravelCancelledHandler implements JobHandler {
         final String travelRequestId = (String) inputVariables.get("travelRequestId");
         
         //Notify customer
-        customerService.notifyTravelCancelled(travelRequestId);
+        customerService.notifyBookingCancelled(travelRequestId);
                
         //Complete the Job
         client.newCompleteCommand(job.getKey()).send().join();
