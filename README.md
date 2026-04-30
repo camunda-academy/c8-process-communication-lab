@@ -143,5 +143,5 @@ src/main/resources/
 
 | Library | Version | Purpose |
 |---|---|---|
-| `io.camunda:camunda-client-java` | 8.8.0 | Camunda 8 Java client |
-| `org.slf4j:slf4j-simple` | 2.0.16 | Logging |
+| `io.camunda:camunda-client-java` | 8.9.0 | Camunda 8 Java client |
+| `org.slf4j:slf4j-simple` | 2.0.17 | Logging |
