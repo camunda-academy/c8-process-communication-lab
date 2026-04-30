@@ -35,17 +35,17 @@ public class BookingConfirmedHandler implements JobHandler{
 
     @Override
     public void handle(JobClient client, ActivatedJob job) throws Exception {
-        
+
         //Obtain the Process Variables
         final Map<String, Object> inputVariables = job.getVariablesAsMap();
         final String travelRequestId = (String) inputVariables.get("travelRequestId");
         final String travelDestination = (String) inputVariables.get("travelDestination");
         final String travelDate = (String) inputVariables.get("travelDate");
-        final String travelFlight =  (String) inputVariables.get("travelFlight");
-        final String travelHotel =  (String) inputVariables.get("travelHotel");
-        
+        final String travelFlight = (String) inputVariables.get("travelFlight");
+        final String travelHotel = (String) inputVariables.get("travelHotel");
+
         loadProperties();
-        
+
         final OAuthCredentialsProvider credentialsProvider = new OAuthCredentialsProviderBuilder()
             .authorizationServerUrl(CAMUNDA_AUTHORIZATION_SERVER_URL)
             .audience(CAMUNDA_TOKEN_AUDIENCE)
@@ -53,21 +53,21 @@ public class BookingConfirmedHandler implements JobHandler{
             .clientSecret(CAMUNDA_CLIENT_SECRET)
             .build();
 
-        try (final CamundaClient  consultantClient = CamundaClient.newClientBuilder()
+        try (final CamundaClient consultantClient = CamundaClient.newClientBuilder()
                 .grpcAddress(URI.create(CAMUNDA_GRPC_ADDRESS))
                 .restAddress(URI.create(CAMUNDA_REST_ADDRESS))
                 .credentialsProvider(credentialsProvider)
-                 .build()) {
-        
+                .build()) {
+
             //Build the Message Variables
-            final Map<String, Object> messageVariables = new HashMap<String, Object>();
-            
+            final Map<String, Object> messageVariables = new HashMap<>();
+
             messageVariables.put("travelRequestId", travelRequestId);
             messageVariables.put("travelDestination", travelDestination);
             messageVariables.put("travelDate", travelDate);
             messageVariables.put("travelFlight", travelFlight);
             messageVariables.put("travelHotel", travelHotel);
-                            
+
             //Send the message
             consultantClient.newPublishMessageCommand()
                 .messageName(MESSAGE_NAME)
@@ -75,13 +75,13 @@ public class BookingConfirmedHandler implements JobHandler{
                 .variables(messageVariables)
                 .send()
                 .join();
-            
-             logger.info(travelRequestId + " Travel Request: Confirmation sent");
-            
+
+            logger.info("{} Travel Request: Confirmation sent", travelRequestId);
+
             //Complete the Job
             client.newCompleteCommand(job.getKey()).variables(messageVariables).send().join();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error sending booking confirmed message", e);
         }
     }
     
@@ -97,7 +97,7 @@ public class BookingConfirmedHandler implements JobHandler{
             CAMUNDA_TOKEN_AUDIENCE = properties.getProperty("CAMUNDA_TOKEN_AUDIENCE");
         
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to load properties", e);
         }
     }
 }

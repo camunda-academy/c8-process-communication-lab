@@ -37,13 +37,13 @@ public class BusinessTravelApplication {
     private static final int WORKER_TIMEOUT = 10;
 
     //Process Definition Details
-    private static final String NOTIFY_CUSTOMER_TRAVEL_CONFIRMED_JOB_TYPE ="notifyCustomerTravelConfirmed";
-    private static final String NOTIFY_EMPLOYEE_POLICY_CHANGED ="notifyEmployeeTravelPolicyChanged";
-    
+    private static final String NOTIFY_CUSTOMER_TRAVEL_CONFIRMED_JOB_TYPE = "notifyCustomerTravelConfirmed";
+    private static final String NOTIFY_EMPLOYEE_POLICY_CHANGED = "notifyEmployeeTravelPolicyChanged";
+
     private static final String BOOK_REQUEST_JOB_TYPE = "bookRequest";
-    private static final String NOTIFY_CUSTOMER_TRAVEL_CANCELLED_JOB_TYPE ="notifyCustomerTravelCancelled";
+    private static final String NOTIFY_CUSTOMER_TRAVEL_CANCELLED_JOB_TYPE = "notifyCustomerTravelCancelled";
     
-    public static void main(String[] args) throws IOException{
+    public static void main(String[] args) throws IOException {
         
         loadProperties();
 
@@ -54,14 +54,14 @@ public class BusinessTravelApplication {
             .clientSecret(CAMUNDA_CLIENT_SECRET)
             .build();
 
-        try (final CamundaClient  client = CamundaClient.newClientBuilder()
+        try (final CamundaClient client = CamundaClient.newClientBuilder()
                 .grpcAddress(URI.create(CAMUNDA_GRPC_ADDRESS))
                 .restAddress(URI.create(CAMUNDA_REST_ADDRESS))
                 .credentialsProvider(credentialsProvider)
-                 .build()) {
-            
+                .build()) {
+
             //Request the Cluster Topology
-             logger.info("Connected to Cluster 1: " + client.newTopologyRequest().send().join());
+            logger.info("Connected to Cluster 1: {}", client.newTopologyRequest().send().join());
             
             //Contact customer travel confirmed
             final JobWorker notifyCustomerTravelConfirmedWorker =
@@ -88,13 +88,12 @@ public class BusinessTravelApplication {
                         .open();
             
             final JobWorker notifyCustomerBookingCancelledWorker =
-                      client.newWorker()
-                          .jobType(NOTIFY_CUSTOMER_TRAVEL_CANCELLED_JOB_TYPE)
-                          .handler(new NotifyCustomerTravelCancelledHandler())
-                          .timeout(Duration.ofSeconds(WORKER_TIMEOUT).toMillis())
-                          .open();
-            
-                        
+                    client.newWorker()
+                        .jobType(NOTIFY_CUSTOMER_TRAVEL_CANCELLED_JOB_TYPE)
+                        .handler(new NotifyCustomerTravelCancelledHandler())
+                        .timeout(Duration.ofSeconds(WORKER_TIMEOUT).toMillis())
+                        .open();
+
             //Wait for the Workers
             Scanner sc = new Scanner(System.in);
             sc.nextInt();
@@ -105,10 +104,10 @@ public class BusinessTravelApplication {
             notifyCustomerBookingCancelledWorker.close();
             
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Application error", e);
         }
     }
-    
+
     private static void loadProperties() {
         Properties properties = new Properties();
         try (FileInputStream input = new FileInputStream(CAMUNDA_PROPERTIES_PATH)) {
@@ -121,7 +120,7 @@ public class BusinessTravelApplication {
             CAMUNDA_TOKEN_AUDIENCE = properties.getProperty("CAMUNDA_TOKEN_AUDIENCE");
         
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to load properties", e);
         }
     }
 }

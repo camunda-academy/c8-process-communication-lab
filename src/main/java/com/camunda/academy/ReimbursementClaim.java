@@ -38,7 +38,7 @@ public class ReimbursementClaim {
     private static final String REIMBURSE_EXPENSES_JOB_TYPE = "reimburseExpenses";
     private static final String NOTIFY_CONSULTANT_EXPENSES_REIMBURSED_JOB_TYPE = "notifyConsultantExpensesReimbursed";
 
-    public static void main(String[] args) throws IOException{
+    public static void main(String[] args) throws IOException {
 
         loadProperties();
 
@@ -49,14 +49,14 @@ public class ReimbursementClaim {
             .clientSecret(CAMUNDA_CLIENT_SECRET)
             .build();
 
-        try (final CamundaClient  client = CamundaClient.newClientBuilder()
+        try (final CamundaClient client = CamundaClient.newClientBuilder()
                 .grpcAddress(URI.create(CAMUNDA_GRPC_ADDRESS))
                 .restAddress(URI.create(CAMUNDA_REST_ADDRESS))
                 .credentialsProvider(credentialsProvider)
-                 .build()) {
-            
+                .build()) {
+
             //Request the Cluster Topology
-             logger.info("Connected to Cluster 1: " + client.newTopologyRequest().send().join());
+            logger.info("Connected to Cluster 1: {}", client.newTopologyRequest().send().join());
                                     
             //Reimbursed expenses
             final JobWorker reimburseExpensesWorker =
@@ -82,7 +82,7 @@ public class ReimbursementClaim {
             notifyEmployeeWorker.close();
             
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Application error", e);
         }
     }
 
@@ -98,7 +98,7 @@ public class ReimbursementClaim {
             CAMUNDA_TOKEN_AUDIENCE = properties.getProperty("CAMUNDA_TOKEN_AUDIENCE");
         
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to load properties", e);
         }
     }
 }

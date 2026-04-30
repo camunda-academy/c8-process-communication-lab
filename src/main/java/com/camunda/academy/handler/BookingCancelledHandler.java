@@ -35,53 +35,53 @@ public class BookingCancelledHandler implements JobHandler{
 
     @Override
     public void handle(JobClient client, ActivatedJob job) throws Exception {
-    
-    //Obtain the Process Variables
-    final Map<String, Object> inputVariables = job.getVariablesAsMap();
-    final String travelRequestId = (String) inputVariables.get("travelRequestId");
-    final String travelDestination = (String) inputVariables.get("travelDestination");
-    final String travelDate = (String) inputVariables.get("travelDate");
-    final String travelFlight =  (String) inputVariables.get("travelFlight");
-    final String travelHotel =  (String) inputVariables.get("travelHotel");
-    
-    loadProperties();
-    
-    final OAuthCredentialsProvider credentialsProvider = new OAuthCredentialsProviderBuilder()
+
+        //Obtain the Process Variables
+        final Map<String, Object> inputVariables = job.getVariablesAsMap();
+        final String travelRequestId = (String) inputVariables.get("travelRequestId");
+        final String travelDestination = (String) inputVariables.get("travelDestination");
+        final String travelDate = (String) inputVariables.get("travelDate");
+        final String travelFlight = (String) inputVariables.get("travelFlight");
+        final String travelHotel = (String) inputVariables.get("travelHotel");
+
+        loadProperties();
+
+        final OAuthCredentialsProvider credentialsProvider = new OAuthCredentialsProviderBuilder()
             .authorizationServerUrl(CAMUNDA_AUTHORIZATION_SERVER_URL)
             .audience(CAMUNDA_TOKEN_AUDIENCE)
             .clientId(CAMUNDA_CLIENT_ID)
             .clientSecret(CAMUNDA_CLIENT_SECRET)
             .build();
 
-        try (final CamundaClient  consultantClient = CamundaClient.newClientBuilder()
+        try (final CamundaClient consultantClient = CamundaClient.newClientBuilder()
                 .grpcAddress(URI.create(CAMUNDA_GRPC_ADDRESS))
                 .restAddress(URI.create(CAMUNDA_REST_ADDRESS))
                 .credentialsProvider(credentialsProvider)
-                 .build()) {
-    
-        //Build the Message Variables
-        final Map<String, Object> messageVariables = new HashMap<String, Object>();
-        
-        messageVariables.put("travelRequestId", travelRequestId);
-        messageVariables.put("travelDestination", travelDestination);
-        messageVariables.put("travelDate", travelDate);
-        messageVariables.put("travelFlight", travelFlight);
-        messageVariables.put("travelHotel", travelHotel);
-                    
-        //Send the message
-        consultantClient.newPublishMessageCommand()
-            .messageName(MESSAGE_NAME)
-            .correlationKey(travelRequestId)
-            .variables(messageVariables)
-            .send()
-            .join();
-        
-         logger.info(travelRequestId + " Travel Request: Booking cancellation sent");	
-        
-        //Complete the Job
-        client.newCompleteCommand(job.getKey()).variables(messageVariables).send().join();
+                .build()) {
+
+            //Build the Message Variables
+            final Map<String, Object> messageVariables = new HashMap<>();
+
+            messageVariables.put("travelRequestId", travelRequestId);
+            messageVariables.put("travelDestination", travelDestination);
+            messageVariables.put("travelDate", travelDate);
+            messageVariables.put("travelFlight", travelFlight);
+            messageVariables.put("travelHotel", travelHotel);
+
+            //Send the message
+            consultantClient.newPublishMessageCommand()
+                .messageName(MESSAGE_NAME)
+                .correlationKey(travelRequestId)
+                .variables(messageVariables)
+                .send()
+                .join();
+
+            logger.info("{} Travel Request: Booking cancellation sent", travelRequestId);
+
+            //Complete the Job
+            client.newCompleteCommand(job.getKey()).variables(messageVariables).send().join();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error sending booking cancellation message", e);
         }
     }
 
@@ -97,7 +97,7 @@ public class BookingCancelledHandler implements JobHandler{
             CAMUNDA_TOKEN_AUDIENCE = properties.getProperty("CAMUNDA_TOKEN_AUDIENCE");
         
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to load properties", e);
         }
     }
 }
