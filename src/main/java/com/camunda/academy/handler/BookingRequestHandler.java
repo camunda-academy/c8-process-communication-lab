@@ -17,7 +17,7 @@ import io.camunda.client.api.worker.JobHandler;
 import io.camunda.client.impl.oauth.OAuthCredentialsProvider;
 import io.camunda.client.impl.oauth.OAuthCredentialsProviderBuilder;
 
-public class BookingRequestHandler implements JobHandler{
+public class BookingRequestHandler implements JobHandler {
     
     private static final Logger logger = LoggerFactory.getLogger(BookingRequestHandler.class);
 
@@ -41,8 +41,8 @@ public class BookingRequestHandler implements JobHandler{
         final String travelRequestId = (String) inputVariables.get("travelRequestId");
         final String travelDestination = (String) inputVariables.get("travelDestination");
         final String travelDate = (String) inputVariables.get("travelDate");
-        final String travelFlight =  (String) inputVariables.get("travelFlight");
-        final String travelHotel =  (String) inputVariables.get("travelHotel");
+        final String travelFlight = (String) inputVariables.get("travelFlight");
+        final String travelHotel = (String) inputVariables.get("travelHotel");
 
         loadProperties();
 
@@ -53,21 +53,21 @@ public class BookingRequestHandler implements JobHandler{
             .clientSecret(CAMUNDA_CLIENT_SECRET)
             .build();
 
-        try (final CamundaClient  travelAgencyClient = CamundaClient.newClientBuilder()
+        try (final CamundaClient travelAgencyClient = CamundaClient.newClientBuilder()
                 .grpcAddress(URI.create(CAMUNDA_GRPC_ADDRESS))
                 .restAddress(URI.create(CAMUNDA_REST_ADDRESS))
                 .credentialsProvider(credentialsProvider)
-                 .build()) {
-    
+                .build()) {
+
             //Build the Message Variables
-            final Map<String, Object> messageVariables = new HashMap<String, Object>();
+            final Map<String, Object> messageVariables = new HashMap<>();
             
             messageVariables.put("travelRequestId", travelRequestId);
             messageVariables.put("travelDestination", travelDestination);
             messageVariables.put("travelDate", travelDate);
             messageVariables.put("travelFlight", travelFlight);
             messageVariables.put("travelHotel", travelHotel);
-                            
+
             //Send the message
             travelAgencyClient.newPublishMessageCommand()
                 .messageName(MESSAGE_NAME)
@@ -75,16 +75,16 @@ public class BookingRequestHandler implements JobHandler{
                 .variables(messageVariables)
                 .send()
                 .join();
-                
-             logger.info(travelRequestId + " Travel Request started");
-            
+
+            logger.info("{} Travel Request started", travelRequestId);
+
             //Complete the Job
             travelAgencyClient.newCompleteCommand(job.getKey()).send().join();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error sending booking request message", e);
         }
     }
-        
+
     private static void loadProperties() {
         Properties properties = new Properties();
         try (FileInputStream input = new FileInputStream(CAMUNDA_PROPERTIES_PATH)) {
@@ -97,7 +97,7 @@ public class BookingRequestHandler implements JobHandler{
             CAMUNDA_TOKEN_AUDIENCE = properties.getProperty("CAMUNDA_TOKEN_AUDIENCE");
         
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to load properties", e);
         }
     }
 }
